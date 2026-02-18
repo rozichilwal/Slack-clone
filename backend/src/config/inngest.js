@@ -7,7 +7,7 @@ export const inngest=new Inngest({id:"slack-clone"});
 
 const syncUser=inngest.createFunction(
     {id:"sync-user"},
-    {event:"clerk/userCreated"},
+    {event:"clerk/user.Created"},
     async({event})=>{
         await connectDB();
 
