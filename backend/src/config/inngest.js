@@ -3,7 +3,7 @@ import {connectDB} from "./db.js";
 import {User} from "../models/user.model.js";
 
 
-export const inngest=new Inngest({id:"stack-clone"});
+export const inngest=new Inngest({id:"slack-clone"});
 
 const syncUser=inngest.createFunction(
     {id:"sync-user"},

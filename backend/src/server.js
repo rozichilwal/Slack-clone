@@ -1,4 +1,4 @@
-import express from "express";
+import express, { json } from "express";
 import {ENV} from "./config/env.js";
 import { connectDB } from "./config/db.js";
 import {clerkMiddleware} from "@clerk/express";
@@ -10,19 +10,24 @@ import {serve} from "inngest/express";
 const app = express();
 
 
-app.use
+app.use(express.json());
 // req.auth will be available in the request object 
 app.use(clerkMiddleware()); 
 
 
-app.use("/api/inngest",serve({client:inngest,functions}));
+
 
 app.get("/",(req,res)=>{
     res.send("hello from rozi");
 });
 
+app.use("/api/inngest",serve({
+    client:inngest,
+    functions,
+}));
 
-const stratSever = async()=>{
+
+const startServer = async()=>{
     try {
         await connectDB();
         if(ENV.NODE_ENV!=="production"){
@@ -37,7 +42,7 @@ const stratSever = async()=>{
     }
 }
 
-stratSever();
+startServer();
 
 export default app;
 
