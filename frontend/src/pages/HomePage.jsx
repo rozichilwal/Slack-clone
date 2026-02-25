@@ -16,10 +16,10 @@ import {
 
 import "../styles/stream-chat-theme.css";
 import { HashIcon, PlusIcon, UsersIcon } from "lucide-react";
-// import CreateChannelModal from "../components/CreateChannelModal";
-// import CustomChannelPreview from "../components/CustomChannelPreview";
-// import UsersList from "../components/UsersList";
-// import CustomChannelHeader from "../components/CustomChannelHeader";
+import CreateChannelModal from "../components/CreateChannelModal";
+import CustomChannelPreview from "../components/CustomChannelPreview";
+import UsersList from "../components/UsersList";
+import CustomChannelHeader from "../components/CustomChannelHeader";
 
 const HomePage = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -42,9 +42,6 @@ const HomePage = () => {
   // todo: handle this with a better component
   if (error) return <p>Something went wrong...</p>;
   if (isLoading || !chatClient) return <PageLoader />;
-
-
-
 
   return (
     <div className="chat-wrapper">
@@ -104,7 +101,7 @@ const HomePage = () => {
                           <span>Direct Messages</span>
                         </div>
                       </div>
-                      {/* <UsersList activeChannel={activeChannel} /> */}
+                      <UsersList activeChannel={activeChannel} />
                     </div>
                   )}
                 />
@@ -116,7 +113,7 @@ const HomePage = () => {
           <div className="chat-main">
             <Channel channel={activeChannel}>
               <Window>
-                {/* <CustomChannelHeader /> */}
+                <CustomChannelHeader />
                 <MessageList />
                 <MessageInput />
               </Window>
@@ -129,7 +126,6 @@ const HomePage = () => {
         {isCreateModalOpen && <CreateChannelModal onClose={() => setIsCreateModalOpen(false)} />}
       </Chat>
     </div>
-  )
-}
-
-export default HomePage
+  );
+};
+export default HomePage;
