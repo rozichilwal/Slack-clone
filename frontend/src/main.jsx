@@ -32,7 +32,7 @@ if (!PUBLISHABLE_KEY) {
 
 
 Sentry.init({
-  dsn: "https://ef49f61b954c1ba9c99361cdf44230c1@o4510905619054592.ingest.us.sentry.io/4510912791576576",
+  dsn: import.meta.env.VITE_SENTRY_DSN,
   integrations: [
     Sentry.reactRouterV7BrowserTracingIntegration({
       useEffect: React.useEffect,
