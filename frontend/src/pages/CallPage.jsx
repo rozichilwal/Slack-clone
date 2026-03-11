@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router";
 import { useQuery } from "@tanstack/react-query";
-import { useUser } from "@clerk/clerk-react";
+import { useUser, useAuth } from "@clerk/clerk-react";
 import toast from "react-hot-toast";
 
 import { getStreamToken } from "../lib/api";
@@ -29,12 +29,22 @@ const CallPage = () => {
   const [call, setCall] = useState(null);
   const [isConnecting, setIsConnecting] = useState(true);
 
-  const { data: tokenData } = useQuery({
-    queryKey: ["streamToken"],
-    queryFn: getStreamToken,
-    enabled: !!user,
-  });
+  // const { data: tokenData } = useQuery({
+  //   queryKey: ["streamToken"],
+  //   queryFn: getStreamToken,
+  //   enabled: !!user,
+  // });
 
+  const { getToken } = useAuth();
+
+const { data: tokenData } = useQuery({
+  queryKey: ["streamToken"],
+  queryFn: async () => {
+    const clerkToken = await getToken();
+    return getStreamToken(clerkToken);
+  },
+  enabled: !!user && isLoaded,
+});
   useEffect(() => {
     const initCall = async () => {
       if (!tokenData.token || !user || !callId) return;

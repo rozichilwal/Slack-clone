@@ -1,6 +1,11 @@
-import { axiosInstance } from './axios';
+import { axiosInstance } from "./axios";
 
-export async function getStreamToken(){
-    const response = await axiosInstance.get("/chat/token");
-    return response.data;
-}
+export const getStreamToken = async (clerkToken) => {
+  const res = await axiosInstance.get("/chat/token", {
+    headers: {
+      Authorization: `Bearer ${clerkToken}`,
+    },
+  });
+
+  return res.data;
+};

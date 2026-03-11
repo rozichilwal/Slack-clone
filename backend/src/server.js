@@ -15,6 +15,7 @@ const app = express();
 // ------------------- CORS Setup -------------------
 const allowedOrigins = [
   "http://localhost:5173", // Local dev
+  "http://localhost:5174", // Local dev (fallback)
   "https://slack-clone-five-ecru.vercel.app", // Your deployed frontend
 ];
 
@@ -61,13 +62,14 @@ Sentry.setupExpressErrorHandler(app);
 // ------------------- Start Server -------------------
 const startServer = async () => {
   try {
-    await connectDB();
-    const PORT = ENV.PORT || 5000;
+    const PORT = ENV.PORT || 5001;
 
     // Listen in all environments (dev + production)
     app.listen(PORT, () => {
       console.log(`Server started on port ${PORT}`);
     });
+
+    await connectDB();
   } catch (error) {
     console.error("Error starting server:", error);
     process.exit(1);
