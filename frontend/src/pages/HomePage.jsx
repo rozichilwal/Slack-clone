@@ -23,6 +23,7 @@ import CustomChannelHeader from "../components/CustomChannelHeader";
 
 const HomePage = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [activeChannel, setActiveChannel] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -44,31 +45,23 @@ const HomePage = () => {
   if (isLoading || !chatClient) return <PageLoader />;
 
   return (
-    <div className="chat-wrapper">
+    <div className={`chat-wrapper ${isSidebarOpen ? "sidebar-open" : "sidebar-closed"}`}>
       <Chat client={chatClient}>
         <div className="chat-container">
           {/* LEFT SIDEBAR */}
           <div className="str-chat__channel-list">
             <div className="team-channel-list">
-              {/* HEADER */}
-              <div className="team-channel-list__header gap-4">
-                <div className="brand-container">
-                  <img src="/logo.png" alt="Logo" className="brand-logo" />
-                  <span className="brand-name">Slap</span>
+              {/* SIDEBAR HEADER */}
+              <div className="sidebar-header flex items-center justify-between w-full">
+                <div className="brand-container flex items-center gap-2">
+                  <img src="/logo.png" alt="Logo" className="brand-logo h-8 w-8 object-contain" />
+                  <span className="brand-name font-bold">Slap</span>
                 </div>
                 <div className="user-button-wrapper">
                   <UserButton />
                 </div>
               </div>
               {/* CHANNELS LIST */}
-              <div className="team-channel-list__content">
-                <div className="create-channel-section">
-                  <button onClick={() => setIsCreateModalOpen(true)} className="create-channel-btn">
-                    <PlusIcon className="size-4" />
-                    <span>Create Channel</span>
-                  </button>
-                </div>
-
                 {/* CHANNEL LIST */}
                 <ChannelList
                   filters={{ members: { $in: [chatClient?.user?.id] } }}
@@ -77,12 +70,26 @@ const HomePage = () => {
                     <CustomChannelPreview
                       channel={channel}
                       activeChannel={activeChannel}
-                      setActiveChannel={(channel) => setSearchParams({ channel: channel.id })}
+                      setActiveChannel={(channel) => {
+                        setSearchParams({ channel: channel.id });
+                        setIsSidebarOpen(false);
+                      }}
                     />
                   )}
                   List={({ children, loading, error }) => (
-                    <div className="channel-sections">
-                      <div className="section-header">
+                    <div className="team-channel-list__content">
+                      <div className="create-channel-section">
+                        <button
+                          onClick={() => setIsCreateModalOpen(true)}
+                          className="create-channel-btn"
+                        >
+                          <PlusIcon className="size-4" />
+                          <span>Create Channel</span>
+                        </button>
+                      </div>
+
+                      <div className="channel-sections">
+                        <div className="section-header">
                         <div className="section-title">
                           <HashIcon className="size-4" />
                           <span>Channels</span>
@@ -101,19 +108,22 @@ const HomePage = () => {
                           <span>Direct Messages</span>
                         </div>
                       </div>
-                      <UsersList activeChannel={activeChannel} />
+                      <UsersList
+                        activeChannel={activeChannel}
+                        onSelect={() => setIsSidebarOpen(false)}
+                      />
                     </div>
+                  </div>
                   )}
                 />
               </div>
             </div>
-          </div>
 
           {/* RIGHT CONTAINER */}
           <div className="chat-main">
             <Channel channel={activeChannel}>
               <Window>
-                <CustomChannelHeader />
+                <CustomChannelHeader onMenuClick={() => setIsSidebarOpen(true)} />
                 <MessageList />
                 <MessageInput />
               </Window>

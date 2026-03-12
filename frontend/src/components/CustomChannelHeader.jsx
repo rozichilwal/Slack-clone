@@ -1,12 +1,12 @@
-import { HashIcon, LockIcon, UsersIcon, PinIcon, VideoIcon } from "lucide-react";
+import { HashIcon, LockIcon, UsersIcon, PinIcon, VideoIcon, MenuIcon } from "lucide-react";
 import { useChannelStateContext } from "stream-chat-react";
 import { useState } from "react";
-import { useUser } from "@clerk/clerk-react";
+import { useUser, UserButton } from "@clerk/clerk-react";
 import MembersModal from "./MembersModal";
 import PinnedMessagesModal from "./PinnedMessagesModal";
 import InviteModal from "./InviteModal";
 
-const CustomChannelHeader = () => {
+const CustomChannelHeader = ({ onMenuClick }) => {
   const { channel } = useChannelStateContext();
   const { user } = useUser();
 
@@ -39,14 +39,23 @@ const CustomChannelHeader = () => {
   };
 
   return (
-    <div className="h-14 border-b border-gray-200 flex items-center px-4 justify-between bg-white">
+    <div className="h-14 border-b border-gray-200 flex items-center px-4 justify-between bg-white mobile-header-parent">
       <div className="flex items-center gap-3">
+        <button
+          className="md:hidden p-1 hover:bg-gray-100 rounded-md mr-1"
+          onClick={onMenuClick}
+          aria-label="Open menu"
+        >
+          <MenuIcon className="size-6 text-[#616061]" />
+        </button>
+
         <div className="flex items-center gap-2">
-          {channel.data?.private ? (
-            <LockIcon className="size-4 text-[#616061]" />
-          ) : (
-            <HashIcon className="size-4 text-[#616061]" />
-          )}
+          {!isDM &&
+            (channel.data?.private ? (
+              <LockIcon className="size-4 text-[#616061]" />
+            ) : (
+              <HashIcon className="size-4 text-[#616061]" />
+            ))}
 
           {isDM && otherUser?.user?.image && (
             <img

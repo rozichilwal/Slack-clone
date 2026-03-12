@@ -6,7 +6,7 @@ import { useChatContext } from "stream-chat-react";
 import * as Sentry from "@sentry/react";
 import { CircleIcon } from "lucide-react";
 
-const UsersList = ({ activeChannel }) => {
+const UsersList = ({ activeChannel, onSelect }) => {
   const { client } = useChatContext();
   const [_, setSearchParams] = useSearchParams();
 
@@ -50,6 +50,7 @@ const UsersList = ({ activeChannel }) => {
       });
       await channel.watch();
       setSearchParams({ channel: channel.id });
+      if (onSelect) onSelect();
     } catch (error) {
       console.log("Error creating DM", error),
         Sentry.captureException(error, {
